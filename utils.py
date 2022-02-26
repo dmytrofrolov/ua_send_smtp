@@ -1,8 +1,6 @@
 import random
 from os import listdir
 from os.path import isfile, join
-from contextlib import contextmanager
-from smtplib import SMTPResponseException, SMTPServerDisconnected
 
 
 def get_emails_list():
@@ -24,18 +22,3 @@ def get_shuffled_texts():
             file_contents += [file_with_letter.read()]
     random.shuffle(file_contents)
     return file_contents
-
-
-@contextmanager
-def quitting_smtp_cm(smtp):
-    try:
-        yield smtp
-    finally:
-        try:
-            code, message = smtp.docmd("QUIT")
-            if code != 221:
-                raise SMTPResponseException(code, message)
-        except SMTPServerDisconnected:
-            pass
-        finally:
-            smtp.close()
